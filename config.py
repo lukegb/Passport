@@ -26,3 +26,5 @@ SERVER_NAME = 'localhost:5000'
 
 MAIL_DEFAULT_SENDER = 'admin@spongepowered.org'
 MAIL_PORT = 1025
+
+RESERVE_NAME_SECRET = '1N4hypg0Xu2v5N861qE5zfuw2QZDBI46'

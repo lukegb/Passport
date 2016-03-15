@@ -6,7 +6,7 @@ import jwt
 from app import db, mail
 from app.users.models import User
 from app.users.utils import is_safe_url
-from app.users.decorators import requires_login
+from app.users.decorators import requires_login, requires_reserve_name_secret
 from app.users.forms import LoginForm
 
 mod = Blueprint('users', __name__, url_prefix='/users')
@@ -158,3 +158,42 @@ def activate_account():
             return redirect('https://forums.spongepowered.org')
 
     return render_template("users/activate.html", **data)
+
+
+@mod.route('/reservation/<username>/', methods=['POST', 'DELETE', 'GET'])
+@requires_reserve_name_secret
+def reserve_name(username):
+    appname = request.args.get('appname', None)
+    if request.method in ['POST', 'DELETE'] and not appname:
+        return make_response('No "appname".', 400)
+
+    if request.method == 'POST':
+        u = User()
+        u.username = username
+        u.name = appname
+        u.password = '!!!'
+        u.email = ''
+        u.active = False
+        u.is_reserved_name = True
+        try:
+            db.session.add(u)
+            db.session.commit()
+        except Exception as ex:
+            print(ex)
+            return make_response('Conflict :(', 409)
+
+        return make_response('OK!', 201)
+    elif request.method == 'DELETE':
+        u = User.query.filter_by(name=appname, username=username, is_reserved_name=True).first()
+        if u is None:
+            return make_response('not valid.', 400)
+
+        db.session.delete(u)
+        db.session.commit()
+        return make_response('Deleted.', 200)
+    elif request.method == 'GET':
+        u = User.query.filter_by(username=username, is_reserved_name=True).first()
+        if u is None:
+            return make_response('Nope.', 404)
+        return make_response(u.name, 200)
+

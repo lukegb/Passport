@@ -20,6 +20,8 @@ class User(db.Model):
     active_avatar = db.Column(db.Integer, db.ForeignKey('users_useravatar.id'))
     avatars = db.relationship('UserAvatar', backref='user', lazy='dynamic', foreign_keys='UserAvatar.user_id')
 
+    is_reserved_name = db.Column(db.Boolean, default=False, nullable=False)
+
     active = db.Column(db.Boolean, default=False, nullable=False)
     banned = db.Column(db.Boolean, default=False, nullable=False)
     banned_until = db.Column(db.DateTime(timezone=True), nullable=True)
