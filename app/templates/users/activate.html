@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Activate Account{% endblock %}
+
+{% block main %}
+<p>Hi! Your account is almost set up, but we need to verify your email address.</p>
+<p>We've sent you an email, and you should click the link contained within it to activate your account.</p>
+{% if bad_token %}
+<p class="error">Whoops! Looks like the URL you clicked was broken. Try copy and pasting it from the email into your address bar, or, failing that, try resending it using the button below.</p>
+{% endif %}
+{% if not_your_user %}
+<p class="error">Whoops! Looks like the URL you clicked was for a different user. You should try <a href="/users/logout/">logging out</a> and then clicking the link in the email again.</p>
+{% endif %}
+<form action="." method="POST">
+<p>Didn't get the email?</p>
+<input type="submit" name="resend" value="Resend confirmation email">
+</form>
+{% endblock %}

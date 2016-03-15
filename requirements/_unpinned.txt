@@ -1,0 +1,6 @@
+Flask
+Flask-WTF
+flask-sqlalchemy
+Flask-Uploads
+cryptography
+Flask-Mail

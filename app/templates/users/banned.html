@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}You are Banned{% endblock %}
+
+{% block main %}
+<h1>You're Banned</h1>
+<p>You have been banned {% if user.banned_until %}until {{ user.banned_until.strftime('%Y-%m-%d %H:%M') }}{% else %}permanently{% endif %}.</p>
+{% if user.ban_reason %}
+<p>The reason given was: {{ user.ban_reason }}</p>
+{% endif %}
+{% endblock %}
